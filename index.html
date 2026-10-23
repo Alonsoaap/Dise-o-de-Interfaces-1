@@ -78,9 +78,8 @@
                 <div class="form-group" id="groupCodigoAlumno">
                     <label for="inputCodigoAlumno">Código de alumno</label>
                     <input type="text" id="inputCodigoAlumno" inputmode="numeric" pattern="[0-9]+" aria-describedby="errorCodigoAlumno" placeholder="Ej. 2026001" autocomplete="off">
-                <!-- Contenedor/Span para el mensaje de error -->
                     <span id="errorCodigoAlumno" class="error" style="display: none; color: #e53e3e; font-size: 11px; margin-top: 4px;">¡Solo se permiten números!</span>
-            </div>
+                </div>
 
                 <div class="form-group" id="groupNombres">
                     <label for="inputNombres">Nombres y apellidos</label>
@@ -95,7 +94,7 @@
                 <div class="form-group" id="groupProblemaEspecifico">
                     <label for="selectProblemaEspecifico">Problema específico</label>
                     <select id="selectProblemaEspecifico">
-                        <option value="">Error en el Nombre y Apellido...</option>
+                        <option value="">Selecciona un problema...</option>
                         <option value="cobro_doble">Me cobraron dos veces</option>
                         <option value="no_reflejado">Pago no reflejado</option>
                         <option value="error_pasarela">Error en la pasarela</option>
@@ -140,7 +139,10 @@
                     </span>
                 </div>
 
-                <button class="btn-primary" id="btnContinuarPaso2" type="button">Continuar</button>
+                <div class="actions-row" id="actionsRowPaso2" style="display: flex; gap: 8px; margin-top: 16px;">
+                    <button class="btn-primary btn-outline" id="btnAtrasPaso2" type="button" onclick="switchView('paso1')">Atrás</button>
+                    <button class="btn-primary" id="btnContinuarPaso2" type="button" style="flex: 1;">Continuar</button>
+                </div>
             </div>
         </div>
 
@@ -168,9 +170,9 @@
                     <p class="request-meta"><strong>PRIORIDAD Y PLAZO ESTIMADO:</strong> <span id="summaryPrioridad">Alta · 12 horas</span></p>
                 </div>
 
-                <div class="actions-row" id="actionsRowPaso3">
-                    <button class="btn-primary btn-outline" id="btnCorregirP3" onclick="switchView('paso2')">Corregir</button>
-                    <button class="btn-primary" id="btnConfirmarP3" type="button">Confirmar</button>
+                <div class="actions-row" id="actionsRowPaso3" style="display: flex; gap: 8px; margin-top: 16px;">
+                    <button class="btn-primary btn-outline" id="btnCorregirP3" type="button" onclick="switchView('paso2')">Corregir</button>
+                    <button class="btn-primary" id="btnConfirmarP3" type="button" style="flex: 1;">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -198,8 +200,8 @@
                     </p>
                 </div>
 
-                <button class="btn-primary btn-outline" id="btnNuevaSolicitudP4" onclick="switchView('paso1')" style="margin-bottom: 8px;">Nueva solicitud</button>
-                <button class="btn-primary" id="btnVerSolicitudesP4" onclick="switchView('mis-solicitudes')">Ver solicitudes</button>
+                <button class="btn-primary btn-outline" id="btnNuevaSolicitudP4" type="button" onclick="switchView('paso1')" style="margin-bottom: 8px; width: 100%;">Nueva solicitud</button>
+                <button class="btn-primary" id="btnVerSolicitudesP4" type="button" onclick="switchView('mis-solicitudes')" style="width: 100%;">Ver solicitudes</button>
             </div>
         </div>
 
