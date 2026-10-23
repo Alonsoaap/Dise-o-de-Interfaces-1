@@ -77,26 +77,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // 4. VALIDACIONES DE ENTRADA
     // ==========================================
 
-    // Solo letras y números en código de alumno
-    if (inputCodigoAlumno) {
-    inputCodigoAlumno.addEventListener("keydown", (evento) => {
-        // Teclas de control permitidas para navegación y borrado
-        const teclasPermitidas = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
-        
-        if (teclasPermitidas.includes(evento.key)) {
-            if (errorCodigoAlumno) errorCodigoAlumno.style.display = 'none';
-            return;
-        }
+    // Validar el contenido funciona al escribir, pegar y usar teclados móviles.
+    // Se mantienen como texto para conservar ceros iniciales.
+    function restringirANumeros(input, error) {
+        if (!input) return;
+        input.addEventListener("input", () => {
+            input.value = input.value.replace(/[^0-9]/g, "");
+            if (error) error.style.display = "none";
+            input.removeAttribute("aria-invalid");
+        });
+    }
 
-        // /\D/ detecta cualquier carácter que NO sea un dígito numérico (0-9)
-        if (/\D/.test(evento.key)) {
-            evento.preventDefault(); // Bloquea la tecla no numérica
-            if (errorCodigoAlumno) errorCodigoAlumno.style.display = 'block'; // Muestra error
-        } else {
-            if (errorCodigoAlumno) errorCodigoAlumno.style.display = 'none'; // Oculta error
-        }
-    });
-}
+    restringirANumeros(inputCodigoAlumno, errorCodigoAlumno);
+    restringirANumeros(inputNumOperacion, document.getElementById("errorNumOperacion"));
 
     // Solo letras y espacios en nombres
     if (inputNombres) {
@@ -104,15 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const permitidas = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", " "];
             if (permitidas.includes(e.key)) return;
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/.test(e.key)) e.preventDefault();
-        });
-    }
-
-    // Solo números en N° de Operación
-    if (inputNumOperacion) {
-        inputNumOperacion.addEventListener("keydown", (e) => {
-            const permitidas = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
-            if (permitidas.includes(e.key)) return;
-            if (!/^[0-9]$/.test(e.key)) e.preventDefault();
         });
     }
 
@@ -159,11 +143,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnContinuarPaso2) {
         btnContinuarPaso2.addEventListener("click", () => {
-            if (!inputCodigoAlumno.value.trim()) { alert("Ingresa tu Código de alumno."); inputCodigoAlumno.focus(); return; }
+            if (!/^[0-9]+$/.test(inputCodigoAlumno.value)) {
+                if (errorCodigoAlumno) errorCodigoAlumno.style.display = "block";
+                inputCodigoAlumno.setAttribute("aria-invalid", "true");
+                alert("Ingresa tu Código de alumno usando solo números.");
+                inputCodigoAlumno.focus();
+                return;
+            }
             if (!inputNombres.value.trim()) { alert("Ingresa tus Nombres y Apellidos."); inputNombres.focus(); return; }
-            if (!inputCorreo.value.trim() || !inputCorreo.value.includes("@")) { alert("Ingresa un Correo válido."); inputCorreo.focus(); return; }
+            // El aviso debe detener este flujo; ningún onclick del HTML debe avanzar.
+            inputCorreo.value = inputCorreo.value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputCorreo.value) || !inputCorreo.checkValidity()) {
+                alert("Ingresa un Correo válido. Ejemplo: alumno@instituto.edu.pe");
+                inputCorreo.focus();
+                return;
+            }
             if (!selectMedioPago.value) { alert("Selecciona un Medio de pago."); selectMedioPago.focus(); return; }
-            if (!inputNumOperacion.value.trim()) { alert("Ingresa el Número de operación."); inputNumOperacion.focus(); return; }
+            if (!/^[0-9]+$/.test(inputNumOperacion.value)) {
+                document.getElementById("errorNumOperacion").style.display = "block";
+                inputNumOperacion.setAttribute("aria-invalid", "true");
+                alert("Ingresa el Número de operación usando solo números.");
+                inputNumOperacion.focus();
+                return;
+            }
             if (!inputMonto.value || parseFloat(inputMonto.value) <= 0) { alert("Ingresa un Monto válido."); inputMonto.focus(); return; }
             if (!inputFechaPago.value) { alert("Selecciona la Fecha de pago."); inputFechaPago.focus(); return; }
 
